@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Logo -->
+    <div class="text-center py-4 bg-white">
+        <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="PokéAPI" width="200">
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-bar py-4">
+        <div class="container">
+            <form method="GET" action="/">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <input type="text" name="busqueda" class="form-control form-control-lg text-center" 
+                               placeholder="Search Pokemon" value="{{ busqueda }}">
+                        <p class="text-center text-muted mt-2 small">Use this input to search for any pokemon. In an instant.</p>
+                    </div>
+                </div>
+
+                <!-- Filtros por tipo -->
+                <div class="container mt-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="fw-bold mb-2">Filter by type:</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="submit" name="tipo" value="normal" class="btn btn-tipo normal">Normal</button>
+                                <button type="submit" name="tipo" value="grass" class="btn btn-tipo grass">Grass</button>
+                                <button type="submit" name="tipo" value="fire" class="btn btn-tipo fire">Fire</button>
+                                <button type="submit" name="tipo" value="water" class="btn btn-tipo water">Water</button>
+                                <button type="submit" name="tipo" value="bug" class="btn btn-tipo bug">Bug</button>
+                                <button type="submit" name="tipo" value="electric" class="btn btn-tipo electric">Electric</button>
+                                <button type="submit" name="tipo" value="rock" class="btn btn-tipo rock">Rock</button>
+                                <button type="submit" name="tipo" value="ghost" class="btn btn-tipo ghost">Ghost</button>
+                                <button type="submit" name="tipo" value="poison" class="btn btn-tipo poison">Poison</button>
+                                <button type="submit" name="tipo" value="psychic" class="btn btn-tipo psychic">Psychic</button>
+                                <button type="submit" name="tipo" value="fighting" class="btn btn-tipo fighting">Fighting</button>
+                                <button type="submit" name="tipo" value="ground" class="btn btn-tipo ground">Ground</button>
+                                <button type="submit" name="tipo" value="dragon" class="btn btn-tipo dragon">Dragon</button>
+                                <a href="/" class="btn btn-tipo reset">Reset</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Grid de Pokémon -->
+    <div class="container my-4">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+            {% for pokemon in pokemones %}
+            <div class="col">
+                <a href="/pokemon/{{ pokemon.nombre }}" class="text-decoration-none text-dark">
+                    <div class="card pokemon-card h-100">
+                        <img src="{{ pokemon.imagen }}" class="card-img-top p-2" alt="{{ pokemon.nombre }}">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">#{{ '%03d' % pokemon.id }}</small>
+                            </div>
+                            <h6 class="card-title mb-1">{{ pokemon.nombre | capitalize }}</h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for tipo in pokemon.tipos %}
+                                <span class="badge tipo-{{ tipo }}">{{ tipo | capitalize }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

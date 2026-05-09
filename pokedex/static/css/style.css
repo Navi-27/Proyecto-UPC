@@ -1,0 +1,79 @@
+body {
+    background-color: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-bar {
+    background-color: #2b2b2b;
+}
+
+.search-bar p {
+    color: #aaa !important;
+}
+
+.pokemon-card {
+    border-radius: 12px;
+    background-color: #e8e8e8;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.pokemon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.pokemon-card img {
+    height: 120px;
+    object-fit: contain;
+}
+
+/* Botones de tipo */
+.btn-tipo {
+    border-radius: 20px;
+    font-size: 0.8rem;
+    padding: 4px 14px;
+    color: white;
+    border: none;
+}
+
+.btn-tipo.normal { background-color: #A8A878; }
+.btn-tipo.grass { background-color: #78C850; }
+.btn-tipo.fire { background-color: #F08030; }
+.btn-tipo.water { background-color: #6890F0; }
+.btn-tipo.bug { background-color: #A8B820; }
+.btn-tipo.electric { background-color: #F8D030; color: #333; }
+.btn-tipo.rock { background-color: #B8A038; }
+.btn-tipo.ghost { background-color: #705898; }
+.btn-tipo.poison { background-color: #A040A0; }
+.btn-tipo.psychic { background-color: #F85888; }
+.btn-tipo.fighting { background-color: #C03028; }
+.btn-tipo.ground { background-color: #E0C068; color: #333; }
+.btn-tipo.dragon { background-color: #7038F8; }
+.btn-tipo.reset { background-color: #222; }
+
+/* Badges de tipo en cards */
+.badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.tipo-normal { background-color: #A8A878; }
+.tipo-grass { background-color: #78C850; }
+.tipo-fire { background-color: #F08030; }
+.tipo-water { background-color: #6890F0; }
+.tipo-bug { background-color: #A8B820; }
+.tipo-electric { background-color: #F8D030; color: #333; }
+.tipo-rock { background-color: #B8A038; }
+.tipo-ghost { background-color: #705898; }
+.tipo-poison { background-color: #A040A0; }
+.tipo-psychic { background-color: #F85888; }
+.tipo-fighting { background-color: #C03028; }
+.tipo-ground { background-color: #E0C068; color: #333; }
+.tipo-dragon { background-color: #7038F8; }
+.tipo-ice { background-color: #98D8D8; color: #333; }
+.tipo-steel { background-color: #B8B8D0; color: #333; }
+.tipo-fairy { background-color: #EE99AC; color: #333; }
+.tipo-dark { background-color: #705848; }
+.tipo-flying { background-color: #A890F0; }
