@@ -1,6 +1,5 @@
 from models.pokemon import Pokemon
 
-
 class Pokedex:
     def __init__(self):
         self.pokemones = []
