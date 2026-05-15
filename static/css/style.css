@@ -77,3 +77,76 @@ body {
 .tipo-fairy { background-color: #EE99AC; color: #333; }
 .tipo-dark { background-color: #705848; }
 .tipo-flying { background-color: #A890F0; }
+
+/* Login y Registro */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.auth-container h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.auth-container .form-control {
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.auth-container .btn-primary {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 600;
+    background-color: #2b2b2b;
+    border: none;
+}
+
+.auth-container .btn-primary:hover {
+    background-color: #444;
+}
+
+.auth-container p {
+    text-align: center;
+    margin-top: 15px;
+    color: #666;
+}
+
+/* Página de equipo */
+.equipo-card {
+    border-radius: 15px;
+    background-color: #e8e8e8;
+    border: none;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.equipo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.equipo-card img {
+    height: 100px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.equipo-vacio {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+}
+
+.equipo-vacio p {
+    font-size: 1.1rem;
+}

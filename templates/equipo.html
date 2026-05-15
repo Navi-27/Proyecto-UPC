@@ -2,35 +2,56 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Equipo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <h1>Mi Equipo Pokémon</h1>
-    <p>Jugador: {{ session['username'] }}</p>
+<body class="bg-light">
 
+    <!-- Header -->
+    <div class="bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
+        <a href="/" class="text-white text-decoration-none">← Volver a la Pokédex</a>
+        <div>
+            <span class="text-white me-3">{{ session['username'] }}</span>
+            <a href="/logout" class="btn btn-sm btn-outline-light">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <!-- Mensajes flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
-            <p style="color: {{ 'green' if category == 'success' else 'red' }}">{{ message }}</p>
+            <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }} m-3" role="alert">
+                {{ message }}
+            </div>
         {% endfor %}
     {% endwith %}
 
-    {% if pokemones %}
-        <p>{{ pokemones|length }}/6 pokemones</p>
-        <div>
-            {% for p in pokemones %}
-                <div>
-                    <img src="{{ p['pokemon_imagen'] }}" alt="{{ p['pokemon_nombre'] }}">
-                    <p>{{ p['pokemon_nombre'] }}</p>
-                    <a href="/equipo/eliminar/{{ p['pokemon_id'] }}">Eliminar</a>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>Tu equipo está vacío. ¡Agrega pokemones desde la Pokédex!</p>
-    {% endif %}
+    <div class="container my-5">
+        <h2 class="fw-bold mb-1">Mi Equipo Pokémon</h2>
+        <p class="text-muted mb-4">{{ pokemones|length }}/6 pokemones</p>
 
-    <br>
-    <a href="/">Volver a la Pokédex</a>
-    <a href="/logout">Cerrar Sesión</a>
+        {% if pokemones %}
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+                {% for p in pokemones %}
+                <div class="col">
+                    <div class="equipo-card">
+                        <img src="{{ p['pokemon_imagen'] }}" alt="{{ p['pokemon_nombre'] }}">
+                        <p class="fw-bold mt-2 mb-1">{{ p['pokemon_nombre'] | capitalize }}</p>
+                        <a href="/equipo/eliminar/{{ p['pokemon_id'] }}" class="btn btn-sm btn-danger w-100">Eliminar</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="equipo-vacio">
+                <p>Tu equipo está vacío.</p>
+                <a href="/" class="btn btn-warning">Explorar Pokédex</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
