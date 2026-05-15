@@ -7,7 +7,7 @@ class Equipo:
     def obtener_equipo(usuario_id):
         conn = get_connection()
         rows = conn.execute(
-            "SELECT * FROM equipos WHERE usuarios_id = ?",(usuario_id)
+            "SELECT * FROM equipos WHERE usuario_id = ?",(usuario_id,)
         ).fetchall()
         conn.close()
         return rows
