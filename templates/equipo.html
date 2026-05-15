@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Equipo</title>
+</head>
+<body>
+    <h1>Mi Equipo Pokémon</h1>
+    <p>Jugador: {{ session['username'] }}</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p style="color: {{ 'green' if category == 'success' else 'red' }}">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% if pokemones %}
+        <p>{{ pokemones|length }}/6 pokemones</p>
+        <div>
+            {% for p in pokemones %}
+                <div>
+                    <img src="{{ p['pokemon_imagen'] }}" alt="{{ p['pokemon_nombre'] }}">
+                    <p>{{ p['pokemon_nombre'] }}</p>
+                    <a href="/equipo/eliminar/{{ p['pokemon_id'] }}">Eliminar</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Tu equipo está vacío. ¡Agrega pokemones desde la Pokédex!</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Volver a la Pokédex</a>
+    <a href="/logout">Cerrar Sesión</a>
+</body>
+</html>

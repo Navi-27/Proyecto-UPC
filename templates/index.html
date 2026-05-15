@@ -9,6 +9,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- Navbar -->
+    <div class="bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
+        <span class="text-white fw-bold">Pokédex</span>
+        <div>
+            {% if session['usuario_id'] %}
+                <span class="text-white me-3">{{ session['username'] }}</span>
+                <a href="/equipo" class="btn btn-sm btn-warning me-2">Mi Equipo</a>
+                <a href="/logout" class="btn btn-sm btn-outline-light">Cerrar Sesión</a>
+            {% else %}
+                <a href="/login" class="btn btn-sm btn-outline-light me-2">Login</a>
+                <a href="/registro" class="btn btn-sm btn-warning">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Logo -->
+    <div class="text-center py-4 bg-white">
+        <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="PokéAPI" width="200">
+    </div>
+
     <!-- Logo -->
     <div class="text-center py-4 bg-white">
         <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="PokéAPI" width="200">
