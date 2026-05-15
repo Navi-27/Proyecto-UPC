@@ -1,6 +1,8 @@
 import requests
+import json
 from models.pokemon import Pokemon
 from models.pokedex import Pokedex
+from models.database import get_connection
 
 class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
@@ -28,24 +30,73 @@ class PokeAPI:
         return pokedex
 
     def obtener_pokemon(self, nombre_o_id):
-        url = f"{self.BASE_URL}/pokemon/{nombre_o_id}"
-        respuesta = requests.get(url)
+        # 1. Buscar en caché primero
+        try:
+            conn = get_connection()
+            row = conn.execute(
+                "SELECT * FROM cache_pokemon WHERE nombre = ? OR id = ?",
+                (str(nombre_o_id), str(nombre_o_id))
+            ).fetchone()
+            conn.close()
 
-        if respuesta.status_code != 200:
+            if row:
+                return Pokemon(
+                    id=row["id"],
+                    nombre=row["nombre"],
+                    tipos=json.loads(row["tipos"]),
+                    altura=row["altura"],
+                    peso=row["peso"],
+                    imagen=row["imagen"],
+                    stats=json.loads(row["stats"])
+                )
+        except:
+            pass
+
+        # 2. Si no está en caché, llamar la API
+        try:
+            url = f"{self.BASE_URL}/pokemon/{nombre_o_id}"
+            respuesta = requests.get(url, timeout=5)
+
+            if respuesta.status_code != 200:
+                return None
+
+            datos = respuesta.json()
+
+            pokemon = Pokemon(
+                id=datos["id"],
+                nombre=datos["name"],
+                tipos=[t["type"]["name"] for t in datos["types"]],
+                altura=datos["height"],
+                peso=datos["weight"],
+                imagen=datos["sprites"]["front_default"],
+                stats={s["stat"]["name"]: s["base_stat"] for s in datos["stats"]}
+            )
+
+            # 3. Guardar en caché
+            try:
+                conn = get_connection()
+                conn.execute(
+                    "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
+                    (
+                        pokemon.id,
+                        pokemon.nombre,
+                        json.dumps(pokemon.tipos),
+                        pokemon.altura,
+                        pokemon.peso,
+                        pokemon.imagen,
+                        json.dumps(pokemon.stats)
+                    )
+                )
+                conn.commit()
+                conn.close()
+            except:
+                pass
+
+            return pokemon
+
+        except:
             return None
 
-        datos = respuesta.json()
-
-        return Pokemon(
-            id=datos["id"],
-            nombre=datos["name"],
-            tipos=[t["type"]["name"] for t in datos["types"]],
-            altura=datos["height"],
-            peso=datos["weight"],
-            imagen=datos["sprites"]["front_default"],
-            stats={s["stat"]["name"]: s["base_stat"] for s in datos["stats"]}
-        )
-    
     def obtener_por_tipo(self, tipo):
         url = f"{self.BASE_URL}/type/{tipo}"
         respuesta = requests.get(url)
