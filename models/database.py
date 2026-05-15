@@ -13,7 +13,7 @@ def init_db():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.executescript('''
             CREATE TABLE IF NOT EXISTS usuarios(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL UNIQUE,
