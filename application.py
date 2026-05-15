@@ -40,7 +40,7 @@ def detalle(nombre):
 @application.route("/registro", methods=["GET","POST"])
 def registro():
     if request.method == "POST":
-        username = request.form["Username"]
+        username = request.form["username"]
         password = request.form["password"]
         exito = Usuario.crear(username,password)
         if exito:
