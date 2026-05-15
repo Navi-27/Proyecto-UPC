@@ -19,7 +19,7 @@ class Equipo:
             return False, "El equipo ya esta completo (6 Pokemones)"
         
         for p in equipo:
-            if p["pokemin_id"] == pokemon_id:
+            if p["pokemon_id"] == pokemon_id:
                 return False, "El pokemon ya se encuentra en tu equipo"
             
         conn = get_connection()
