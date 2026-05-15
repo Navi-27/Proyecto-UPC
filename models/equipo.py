@@ -24,7 +24,7 @@ class Equipo:
             
         conn = get_connection()
         conn.execute(
-            "INSERT INTO equipos (usuario_id, pokemon_id pokemon_nombre, pokemon_imagen) VALUES (?,?,?,?)",
+            "INSERT INTO equipos (usuario_id, pokemon_id, pokemon_nombre, pokemon_imagen) VALUES (?,?,?,?)",
             (usuario_id,pokemon_id,pokemon_nombre,pokemon_imagen)
         )
         conn.commit()
