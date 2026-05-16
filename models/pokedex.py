@@ -1,4 +1,5 @@
 from models.pokemon import Pokemon
+import json
 
 class Pokedex:
     def __init__(self):
@@ -6,6 +7,47 @@ class Pokedex:
 
     def agregar_pokemon(self,pokemon):
         self.pokemones.append(pokemon)
+        from models.database import get_connection
+        conn = get_connection()
+        conn.execute(
+            "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
+            (
+                pokemon.id,
+                pokemon.nombre,
+                json.dumps(pokemon.tipos),
+                pokemon.altura,
+                pokemon.peso,
+                pokemon.imagen,
+                json.dumps(pokemon.stats)
+            )
+        )
+        conn.commit()
+        conn.close()
+        conn = get_connection()
+        conn.execute(
+            "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
+            (
+                pokemon.nombre,
+                json.dumps(pokemon.tipos),
+                pokemon.altura,
+                pokemon.peso,
+                pokemon.imagen,
+                json.dumps(pokemon.stats),
+                pokemon.id
+            )
+        )
+        conn.commit()
+        conn.close()
+        print({ "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
+            (
+                pokemon.nombre,
+                json.dumps(pokemon.tipos,True),
+                pokemon.altura,
+                pokemon.peso,
+                pokemon.imagen,
+                json.dumps(pokemon.stats,True),
+                pokemon.id
+            )})
 
     def buscar_por_nombre(self, nombre):
         nombre = nombre.lower()

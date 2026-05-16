@@ -19,11 +19,11 @@ class PokeAPI:
             pokemon = Pokemon(
                 id=numero,
                 nombre=item["name"],
-                tipos=[],
-                altura=0,
-                peso=0,
+                tipos=[t["type"]["name"] for t in item["types"]] if "types" in item else [],
+                altura=item["height"] if "height" in item else 0,
+                peso=item["weight"] if "weight" in item else 0,
                 imagen=imagen,
-                stats={}
+                stats=item["stats"] if "stats" in item else {}
             )
             pokedex.agregar_pokemon(pokemon)
 
