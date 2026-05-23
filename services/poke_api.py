@@ -9,6 +9,15 @@ class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
     pokedex = Pokedex
 
+    def validacion(self):
+        conn = get_connection()
+        count = conn.execute("SELECT COUNT(*) FROM cache_pokemon").fetchone()[0]
+        if count == 0:
+            return False
+        else:
+            return True
+
+
     def obtener_lista_pokemones(self, limite, offset=0):
         url = f"{self.BASE_URL}/pokemon?limit={limite}&offset={offset}"
         respuesta = requests.get(url)
@@ -106,9 +115,8 @@ class PokeAPI:
 
     def obtener_por_tipo(self, tipo):
         conn = get_connection()
-        rows = conn.execute("SELECT * FROM cache_pokemon WHERE tipos LIKE ?",(tipo,)).fetchall()
-        conn.close
-        print(f"{rows}")
+        rows = conn.execute("SELECT * FROM cache_pokemon WHERE tipos LIKE ?", (f'%{tipo}%',)).fetchall()
+        conn.close()
         pokemones = []
         for row in rows:
             pokemon = Pokemon(

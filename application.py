@@ -9,7 +9,6 @@ application = Flask(__name__)
 application.secret_key = "pokesecretkey123"
 
 api = PokeAPI()
-pokedex = Pokedex()
 
 # inicializar la base ed datos al arrancar
 with application.app_context():
@@ -19,15 +18,18 @@ with application.app_context():
 # rutas principales
 @application.route("/")
 def index():
+    pokedex = Pokedex()
     tipo = request.args.get("tipo", "")
     busqueda = request.args.get("busqueda", "")
-    if pokedex.pokemones == []:
-        pokedexAlt = api.obtener_lista_pokemones(limite=5)
+    validacion = api.validacion()
+    if not validacion:
+        pokedex = api.obtener_lista_pokemones(limite=1025)
     else:
-        pokedexAlt = pokedex
-    pokemones = pokedexAlt.obtener_todos()
+        pokedex = pokedex
+    pokemones = pokedex.obtener_todos()
+    
     if busqueda:
-        pokemones = pokemones.buscar_por_nombre(busqueda)
+        pokemones = pokedex.buscar_por_nombre(busqueda)
     elif tipo:
         pokemones = api.obtener_por_tipo(tipo)
 
