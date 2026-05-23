@@ -9,6 +9,24 @@ class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
     pokedex = Pokedex
 
+    def cargar_desde_db(self):
+        conn = get_connection()
+        rows = conn.execute("SELECT * FROM cache_pokemon").fetchall()
+        conn.close()
+        pokedex = Pokedex()
+        for row in rows:
+            pokemon = Pokemon(
+                id=row["id"],
+                nombre=row["nombre"],
+                tipos=json.loads(row["tipos"]),
+                altura=row["altura"],
+                peso=row["peso"],
+                imagen=row["imagen"],
+                stats=json.loads(row["stats"])
+            )
+            pokedex.agregar_pokemon(pokemon)
+        return pokedex
+
     def validacion(self):
         conn = get_connection()
         count = conn.execute("SELECT COUNT(*) FROM cache_pokemon").fetchone()[0]
@@ -41,7 +59,7 @@ class PokeAPI:
                 altura=datos_pokemon["height"] if "height" in datos_pokemon else 0,
                 peso=datos_pokemon["weight"] if "weight" in datos_pokemon else 0,
                 imagen=imagen,
-                stats=datos_pokemon["stats"] if "stats" in datos_pokemon else {}
+                stats={s["stat"]["name"]: s["base_stat"] for s in datos_pokemon["stats"]} if "stats" in datos_pokemon else {}
             )
             pokedex.agregar_pokemon(pokemon)
         pokedex.guardar_en_db()

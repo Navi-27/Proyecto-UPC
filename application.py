@@ -25,7 +25,7 @@ def index():
     if not validacion:
         pokedex = api.obtener_lista_pokemones(limite=1025)
     else:
-        pokedex = pokedex
+        pokedex = api.cargar_desde_db()
     pokemones = pokedex.obtener_todos()
     
     if busqueda:

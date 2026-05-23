@@ -49,9 +49,13 @@ class Pokedex:
         # conn.close()
 
     def buscar_por_nombre(self, nombre):
+        pokemones = []
         nombre = nombre.lower()
-        return [p for p in self.pokemones if nombre in p.nombre.lower()]
-    
+        for pokemon in self.pokemones:
+            if nombre in pokemon.nombre.lower():
+                pokemones.append(pokemon)
+        return pokemones
+
     def filtrar_por_tipo(self, tipo):
         tipo =  tipo.lower()
         return [p for p in self.pokemones if tipo in p.tipos]
