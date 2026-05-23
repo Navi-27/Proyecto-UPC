@@ -44,7 +44,6 @@ class PokeAPI:
         pokedex = Pokedex()
 
         for i, item in enumerate(datos["results"]):
-            sleep(0.5)
             print(f"Descargando {i+1}/{limite}...")
             url = item["url"]
             respuesta = requests.get(url)
