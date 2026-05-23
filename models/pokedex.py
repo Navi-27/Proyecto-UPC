@@ -7,47 +7,48 @@ class Pokedex:
 
     def agregar_pokemon(self,pokemon):
         self.pokemones.append(pokemon)
+
+    def guardar_en_db(self):
+        if not self.pokemones:
+            return
+
         from models.database import get_connection
         conn = get_connection()
-        conn.execute(
-            "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
-            (
-                pokemon.id,
-                pokemon.nombre,
-                json.dumps(pokemon.tipos),
-                pokemon.altura,
-                pokemon.peso,
-                pokemon.imagen,
-                json.dumps(pokemon.stats)
+        try:
+            conn.executemany(
+                "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
+                [
+                    (pokemon.id,
+                    pokemon.nombre,
+                    json.dumps(pokemon.tipos),
+                    pokemon.altura,
+                    pokemon.peso,
+                    pokemon.imagen,
+                    json.dumps(pokemon.stats))
+                    for pokemon in self.pokemones
+                ]
             )
-        )
-        conn.commit()
-        conn.close()
-        conn = get_connection()
-        conn.execute(
-            "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
-            (
-                pokemon.nombre,
-                json.dumps(pokemon.tipos),
-                pokemon.altura,
-                pokemon.peso,
-                pokemon.imagen,
-                json.dumps(pokemon.stats),
-                pokemon.id
-            )
-        )
-        conn.commit()
-        conn.close()
-        print({ "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
-            (
-                pokemon.nombre,
-                json.dumps(pokemon.tipos,True),
-                pokemon.altura,
-                pokemon.peso,
-                pokemon.imagen,
-                json.dumps(pokemon.stats,True),
-                pokemon.id
-            )})
+            conn.commit()
+            print("guardado")
+        except Exception as e:
+            print(f"Error al guardar {e}")
+        finally:
+            conn.close()
+        # conn = get_connection()
+        # conn.execute(
+        #     "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
+        #     (
+        #         pokemon.nombre,
+        #         json.dumps(pokemon.tipos),
+        #         pokemon.altura,
+        #         pokemon.peso,
+        #         pokemon.imagen,
+        #         json.dumps(pokemon.stats),
+        #         pokemon.id
+        #     )
+        # )
+        # conn.commit()
+        # conn.close()
 
     def buscar_por_nombre(self, nombre):
         nombre = nombre.lower()

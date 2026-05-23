@@ -1,5 +1,6 @@
 import requests
 import json
+from time import sleep
 from models.pokemon import Pokemon
 from models.pokedex import Pokedex
 from models.database import get_connection
@@ -7,26 +8,32 @@ from models.database import get_connection
 class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
 
-    def obtener_lista_pokemones(self, limite=151, offset=0):
+    def obtener_lista_pokemones(self, limite=1025, offset=0):
         url = f"{self.BASE_URL}/pokemon?limit={limite}&offset={offset}"
         respuesta = requests.get(url)
         datos = respuesta.json()
 
         pokedex = Pokedex()
+
         for i, item in enumerate(datos["results"]):
+            print(f"Descargando {i+1}/{limite}...")
+            url = item["url"]
+            respuesta = requests.get(url)
+            datos_pokemon = respuesta.json()
+
             numero = offset + i + 1
             imagen = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{numero}.png"
             pokemon = Pokemon(
                 id=numero,
-                nombre=item["name"],
-                tipos=[t["type"]["name"] for t in item["types"]] if "types" in item else [],
-                altura=item["height"] if "height" in item else 0,
-                peso=item["weight"] if "weight" in item else 0,
+                nombre=datos_pokemon["name"],
+                tipos=[t["type"]["name"] for t in datos_pokemon["types"]] if "types" in datos_pokemon else [],
+                altura=datos_pokemon["height"] if "height" in datos_pokemon else 0,
+                peso=datos_pokemon["weight"] if "weight" in datos_pokemon else 0,
                 imagen=imagen,
-                stats=item["stats"] if "stats" in item else {}
+                stats=datos_pokemon["stats"] if "stats" in datos_pokemon else {}
             )
             pokedex.agregar_pokemon(pokemon)
-
+        pokedex.guardar_en_db()
         return pokedex
 
     def obtener_pokemon(self, nombre_o_id):
