@@ -3,11 +3,13 @@ from services.poke_api import PokeAPI
 from models.database import init_db
 from models.usuario import Usuario
 from models.equipo import Equipo
+from models.pokedex import Pokedex
 
 application = Flask(__name__)
 application.secret_key = "pokesecretkey123"
 
 api = PokeAPI()
+pokedex = Pokedex()
 
 # inicializar la base ed datos al arrancar
 with application.app_context():
@@ -19,14 +21,15 @@ with application.app_context():
 def index():
     tipo = request.args.get("tipo", "")
     busqueda = request.args.get("busqueda", "")
-    pokedex = api.obtener_lista_pokemones(limite=1025)
-    pokemones = pokedex.obtener_todos()
-
+    if pokedex.pokemones == []:
+        pokedexAlt = api.obtener_lista_pokemones(limite=5)
+    else:
+        pokedexAlt = pokedex
+    pokemones = pokedexAlt.obtener_todos()
     if busqueda:
-        pokemones = pokedex.buscar_por_nombre(busqueda)
+        pokemones = pokemones.buscar_por_nombre(busqueda)
     elif tipo:
-        pokedex = api.obtener_por_tipo(tipo)
-        pokemones = pokedex.obtener_todos()
+        pokemones = api.obtener_por_tipo(tipo)
 
     return render_template("index.html", pokemones=pokemones, tipo=tipo, busqueda=busqueda)
 

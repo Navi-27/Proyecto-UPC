@@ -7,8 +7,9 @@ from models.database import get_connection
 
 class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
+    pokedex = Pokedex
 
-    def obtener_lista_pokemones(self, limite=1025, offset=0):
+    def obtener_lista_pokemones(self, limite, offset=0):
         url = f"{self.BASE_URL}/pokemon?limit={limite}&offset={offset}"
         respuesta = requests.get(url)
         datos = respuesta.json()
@@ -16,6 +17,7 @@ class PokeAPI:
         pokedex = Pokedex()
 
         for i, item in enumerate(datos["results"]):
+            sleep(0.5)
             print(f"Descargando {i+1}/{limite}...")
             url = item["url"]
             respuesta = requests.get(url)
@@ -98,31 +100,29 @@ class PokeAPI:
                 conn.close()
             except:
                 pass
-
             return pokemon
-
         except:
             return None
 
     def obtener_por_tipo(self, tipo):
-        url = f"{self.BASE_URL}/type/{tipo}"
-        respuesta = requests.get(url)
-        datos = respuesta.json()
-
-        pokedex = Pokedex()
-        for i, item in enumerate(datos["pokemon"]):
-            nombre = item["pokemon"]["name"]
-            numero = item["pokemon"]["url"].split("/")[-2]
-            imagen = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{numero}.png"
+        conn = get_connection()
+        rows = conn.execute("SELECT * FROM cache_pokemon WHERE tipos LIKE ?",(tipo,)).fetchall()
+        conn.close
+        print(f"{rows}")
+        pokemones = []
+        for row in rows:
             pokemon = Pokemon(
-                id=int(numero),
-                nombre=nombre,
-                tipos=[tipo],
-                altura=0,
-                peso=0,
-                imagen=imagen,
-                stats={}
-            )
-            pokedex.agregar_pokemon(pokemon)
+                id=row["id"],
+                nombre=row["nombre"],
+                tipos=json.loads(row["tipos"]),
+                altura=row["altura"],
+                peso=row["peso"],
+                imagen=row["imagen"],
+                stats=json.loads(row["stats"]))
+            pokemones.append(pokemon)
+        return pokemones
 
-        return pokedex
+
+
+        
+
