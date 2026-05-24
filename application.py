@@ -38,7 +38,8 @@ def index():
 @application.route("/pokemon/<nombre>")
 def detalle(nombre):
     pokemon = api.obtener_pokemon(nombre)
-    return render_template("detalle.html", pokemon=pokemon)
+    tipo = request.args.get("tipo", "")
+    return render_template("detalle.html", pokemon=pokemon, tipo=tipo)
 
 
 # rutas del usuario
@@ -85,11 +86,11 @@ def equipo():
     pokemones = Equipo.obtener_equipo(session["usuario_id"])
     return render_template("equipo.html", pokemones=pokemones)
 
-@application.route("/equipo/agregar/<int:pokemon_id>/<nombre>/<path:imagen>")
-def agregar_al_equipo(pokemon_id, nombre, imagen):
+@application.route("/equipo/agregar/<int:pokemon_id>/<nombre>/<path:imagen>/<tipos>")
+def agregar_al_equipo(pokemon_id, nombre, imagen, tipos):
     if "usuario_id" not in session:
         return redirect(url_for("login"))
-    exito, mensaje = Equipo.agregar_pokemon(session["usuario_id"], pokemon_id, nombre, imagen)
+    exito, mensaje = Equipo.agregar_pokemon(session["usuario_id"], pokemon_id, nombre, imagen, tipos)
     flash(mensaje, "success" if exito else "Error")
     return redirect(url_for("detalle", nombre=nombre))
 

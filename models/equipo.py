@@ -13,7 +13,7 @@ class Equipo:
         return rows
     
     @staticmethod
-    def agregar_pokemon(usuario_id, pokemon_id, pokemon_nombre, pokemon_imagen):
+    def agregar_pokemon(usuario_id, pokemon_id, pokemon_nombre, pokemon_imagen, pokemon_tipos):
         equipo = Equipo.obtener_equipo(usuario_id)
         if len(equipo) >= Equipo.MAX_POKEMONES:
             return False, "El equipo ya esta completo (6 Pokemones)"
@@ -24,8 +24,8 @@ class Equipo:
             
         conn = get_connection()
         conn.execute(
-            "INSERT INTO equipos (usuario_id, pokemon_id, pokemon_nombre, pokemon_imagen) VALUES (?,?,?,?)",
-            (usuario_id,pokemon_id,pokemon_nombre,pokemon_imagen)
+            "INSERT INTO equipos (usuario_id, pokemon_id, pokemon_nombre, pokemon_imagen, pokemon_tipos) VALUES (?,?,?,?,?)",
+            (usuario_id,pokemon_id,pokemon_nombre,pokemon_imagen,pokemon_tipos)
         )
         conn.commit()
         conn.close()

@@ -83,7 +83,7 @@
             <!-- Botón agregar al equipo -->
             <hr>
             {% if session['usuario_id'] %}
-                <a href="/equipo/agregar/{{ pokemon.id }}/{{ pokemon.nombre }}/{{ pokemon.imagen }}" class="btn btn-success w-100">
+                <a href="/equipo/agregar/{{ pokemon.id }}/{{ pokemon.nombre }}/{{ pokemon.imagen }}/{{ pokemon.tipos }}" class="btn btn-success w-100">
                     ➕ Agregar a mi equipo
                 </a>
             {% else %}

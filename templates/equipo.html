@@ -36,10 +36,20 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
                 {% for p in pokemones %}
                 <div class="col">
-                    <div class="equipo-card">
-                        <img src="{{ p['pokemon_imagen'] }}" alt="{{ p['pokemon_nombre'] }}">
-                        <p class="fw-bold mt-2 mb-1">{{ p['pokemon_nombre'] | capitalize }}</p>
-                        <a href="/equipo/eliminar/{{ p['pokemon_id'] }}" class="btn btn-sm btn-danger w-100">Eliminar</a>
+                    <div class="card pokemon-card h-100">
+                        <img src="{{ p['pokemon_imagen'] }}" class="card-img-top p-2" alt="{{ p['pokemon_nombre'] }}">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">#{{ '%03d' % p['pokemon_id'] }}</small>
+                            </div>
+                            <h6 class="card-title mb-1">{{ p['pokemon_nombre'] | capitalize }}</h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for tipo in p['pokemon_tipos'].split(',') %}
+                                <span class="badge tipo-{{ tipo }}">{{ tipo | capitalize }}</span>
+                                {% endfor %}
+                            </div>
+                            <a href="/equipo/eliminar/{{ p['pokemon_id'] }}" class="btn btn-sm btn-danger w-100">Eliminar</a>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}

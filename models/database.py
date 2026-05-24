@@ -27,6 +27,7 @@ def init_db():
                 pokemon_id INTEGER NOT NULL,
                 pokemon_nombre TEXT NOT NULL,
                 pokemon_imagen TEXT,
+                pokemon_tipos TEXT,
                 FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
             );
 
