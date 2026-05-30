@@ -17,6 +17,7 @@
             {% if session['usuario_id'] %}
                 <span class="text-white me-3">{{ session['username'] }}</span>
                 <a href="/equipo" class="btn btn-sm btn-warning me-2">Mi Equipo</a>
+                <a href="/mi-pokedex" class="btn btn-sm btn-warning me-2">Mi Pokedex</a>
                 <a href="/logout" class="btn btn-sm btn-outline-light">Cerrar Sesión</a>
             {% else %}
                 <a href="/login" class="btn btn-sm btn-outline-light me-2">Login</a>
@@ -76,21 +77,21 @@
                         <small class="fw-bold">{{ valor }}</small>
                     </div>
                 </div>
+                <hr>
                 {% endfor %}
-
+                <!-- Botón agregar al equipo -->
+                {% if session['usuario_id'] %}
+                    <a href="/equipo/agregar/{{ pokemon.id }}/{{ pokemon.nombre }}/{{ pokemon.imagen }}/{{ pokemon.tipos }}" class="btn btn-success w-100">
+                        ➕ Agregar a mi equipo
+                    </a>
+                {% else %}
+                    <a href="/login" class="btn btn-outline-secondary w-100">
+                        Inicia sesión para agregar al equipo
+                    </a>
+                {% endif %}
             </div>
 
-            <!-- Botón agregar al equipo -->
-            <hr>
-            {% if session['usuario_id'] %}
-                <a href="/equipo/agregar/{{ pokemon.id }}/{{ pokemon.nombre }}/{{ pokemon.imagen }}/{{ pokemon.tipos }}" class="btn btn-success w-100">
-                    ➕ Agregar a mi equipo
-                </a>
-            {% else %}
-                <a href="/login" class="btn btn-outline-secondary w-100">
-                    Inicia sesión para agregar al equipo
-                </a>
-            {% endif %}
+            
         </div>
     </div>
 

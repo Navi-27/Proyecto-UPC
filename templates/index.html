@@ -17,6 +17,7 @@
             {% if session['usuario_id'] %}
                 <span class="text-white me-3">{{ session['username'] }}</span>
                 <a href="/equipo" class="btn btn-sm btn-warning me-2">Mi Equipo</a>
+                <a href="/mi-pokedex" class="btn btn-sm btn-warning me-2">Mi Pokedex</a>
                 <a href="/logout" class="btn btn-sm btn-outline-light">Cerrar Sesión</a>
             {% else %}
                 <a href="/login" class="btn btn-sm btn-outline-light me-2">Login</a>

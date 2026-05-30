@@ -15,6 +15,7 @@
         <a href="/" class="text-white text-decoration-none">← Volver a la Pokédex</a>
         <div>
             <span class="text-white me-3">{{ session['username'] }}</span>
+            <a href="/mi-pokedex" class="btn btn-sm btn-warning me-2">Mi Pokedex</a>
             <a href="/logout" class="btn btn-sm btn-outline-light">Cerrar Sesión</a>
         </div>
     </div>
@@ -44,11 +45,11 @@
                             </div>
                             <h6 class="card-title mb-1">{{ p['pokemon_nombre'] | capitalize }}</h6>
                             <div class="d-flex flex-wrap gap-1">
-                                {% for tipo in p['pokemon_tipos'].split(',') %}
-                                <span class="badge tipo-{{ tipo }}">{{ tipo | capitalize }}</span>
+                                {% for tipo in p['pokemon_tipos'] | parse_tipos %}
+                                    <span class="badge tipo-{{ tipo }}">{{ tipo | capitalize }}</span>
                                 {% endfor %}
                             </div>
-                            <a href="/equipo/eliminar/{{ p['pokemon_id'] }}" class="btn btn-sm btn-danger w-100">Eliminar</a>
+                            <a href="/equipo/eliminar/{{ p['pokemon_id'] }}" class="btn btn-sm btn-danger w-100 mt-2">Eliminar</a>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ from models.database import init_db
 from models.usuario import Usuario
 from models.equipo import Equipo
 from models.pokedex import Pokedex
+from models.pokedex_usuario import PokedexUsuario
 
 application = Flask(__name__)
 application.secret_key = "pokesecretkey123"
@@ -39,8 +40,21 @@ def index():
 def detalle(nombre):
     pokemon = api.obtener_pokemon(nombre)
     tipo = request.args.get("tipo", "")
+
+    if "usuario_id" in session:
+        PokedexUsuario.registrar_visto(
+            session["usuario_id"],
+            pokemon.id,
+            pokemon.nombre,
+        )
     return render_template("detalle.html", pokemon=pokemon, tipo=tipo)
 
+@application.route("/mi-pokedex")
+def mi_pokedex():
+    if "usuario_id" not in session:
+        return redirect(url_for("login"))
+    vistos = PokedexUsuario.obtener_vistos(session["usuario_id"])
+    return render_template("mi-pokedex.html", vistos=vistos)
 
 # rutas del usuario
 @application.route("/registro", methods=["GET","POST"])
@@ -88,6 +102,7 @@ def equipo():
 
 @application.route("/equipo/agregar/<int:pokemon_id>/<nombre>/<path:imagen>/<tipos>")
 def agregar_al_equipo(pokemon_id, nombre, imagen, tipos):
+    import json
     if "usuario_id" not in session:
         return redirect(url_for("login"))
     exito, mensaje = Equipo.agregar_pokemon(session["usuario_id"], pokemon_id, nombre, imagen, tipos)
@@ -101,6 +116,16 @@ def eliminar_del_equipo(pokemon_id):
     exito, mensaje = Equipo.eliminar_pokemon(session["usuario_id"], pokemon_id)
     flash(mensaje, "success" if exito else "Error")
     return redirect(url_for("equipo"))
+
+#parseo de tipos para poder leerlos correctamente
+@application.template_filter('parse_tipos')
+def parse_tipos(value):
+    import ast
+    import json
+    try:
+        return json.loads(value)
+    except:
+        return ast.literal_eval(value)
 
 if __name__ == "__main__":
     application.run(debug=True)

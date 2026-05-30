@@ -40,6 +40,16 @@ def init_db():
                 imagen TEXT,
                 stats TEXT
             );
+                         
+            CREATE TABLE IF NOT EXISTS pokedex_usuario (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                usuario_id INTEGER NOT NULL,
+                pokemon_id INTEGER NOT NULL,
+                pokemon_nombre TEXT NOT NULL,
+                fecha_visto TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+                UNIQUE(usuario_id, pokemon_id)
+            );
 
             ''');
     conn.commit()
