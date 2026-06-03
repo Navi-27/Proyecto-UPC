@@ -15,4 +15,6 @@ class Pokemon:
     
     def __str__(self):
         return f"Pokemon({self.id}: {self.nombre} - {self.tipos})"
+
+    
         

@@ -5,6 +5,7 @@ from models.pokemon import Pokemon
 from models.pokedex import Pokedex
 from models.database import get_connection
 
+
 class PokeAPI:
     BASE_URL = "https://pokeapi.co/api/v2"
     pokedex = Pokedex
