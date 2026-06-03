@@ -16,13 +16,19 @@ class Pokedex:
         from models.database import get_connection
         conn = get_connection()
         for pokemon in self.pokemones:
-            validacion = conn.execute("SELECT * FROM cache_pokemon WHERE id = ?",(pokemon.id))
-            
-            conn.execute(
-                "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
-                (pokemon.id,pokemon.nombre,json.dumps(pokemon.tipos),pokemon.altura,pokemon.peso,pokemon.imagen,json.dumps(pokemon.stats))
-            )
-            conn.commit()
+            validacion = conn.execute("SELECT 1 FROM cache_pokemon WHERE id = ?",(pokemon.id,)).fetchone() is not None
+            if validacion == False:
+                conn.execute(
+                    "INSERT OR IGNORE INTO cache_pokemon (id, nombre, tipos, altura, peso, imagen, stats) VALUES (?,?,?,?,?,?,?)",
+                    (pokemon.id,pokemon.nombre,json.dumps(pokemon.tipos),pokemon.altura,pokemon.peso,pokemon.imagen,json.dumps(pokemon.stats))
+                )
+                conn.commit()
+            else:
+                conn.execute(
+                    "UPDATE cache_pokemon SET nombre=?, tipos=?, altura=?, peso=?, imagen=?, stats=? WHERE id=?",
+                    (pokemon.nombre, json.dumps(pokemon.tipos), pokemon.altura, pokemon.peso, pokemon.imagen, json.dumps(pokemon.stats), pokemon.id)
+                )
+                conn.commit()
         conn.close()
 
     def buscar_por_nombre(self, nombre):

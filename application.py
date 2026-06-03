@@ -5,17 +5,17 @@ from models.usuario import Usuario
 from models.equipo import Equipo
 from models.pokedex import Pokedex
 from models.pokedex_usuario import PokedexUsuario
-from apscheduler.schedulers.blocking import BlockingScheduler
-import datetime as dt
 
 application = Flask(__name__)
 application.secret_key = "pokesecretkey123"
 
 api = PokeAPI()
 
-scheduler=BlockingScheduler()
+from apscheduler.schedulers.background import BackgroundScheduler
 
-scheduler.add_job(api.obtener_lista_pokemones(2000),'interval',hours=24)
+scheduler = BackgroundScheduler()
+scheduler.add_job(api.obtener_lista_pokemones, 'interval', hours=24, args=[1025])
+scheduler.start()
 
 # inicializar la base de datos al arrancar
 with application.app_context():

@@ -4,6 +4,7 @@ from time import sleep
 from models.pokemon import Pokemon
 from models.pokedex import Pokedex
 from models.database import get_connection
+from datetime import datetime
 
 
 class PokeAPI:
@@ -38,6 +39,7 @@ class PokeAPI:
 
 
     def obtener_lista_pokemones(self, limite, offset=0):
+        print(f"[{datetime.now()}] Ejecutando tarea programada...")
         url = f"{self.BASE_URL}/pokemon?limit={limite}&offset={offset}"
         respuesta = requests.get(url)
         datos = respuesta.json()

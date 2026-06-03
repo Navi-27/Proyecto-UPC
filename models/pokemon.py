@@ -1,5 +1,3 @@
-
-
 class Pokemon:
     def __init__(self, id, nombre, tipos, altura, peso, imagen, stats):
         self.id = id
